@@ -19,15 +19,6 @@ public abstract class DataObject
      * Nick Sifniotis u5809912
      * 06/11/2015
      *
-     * This method is supposed to initialise other, non public fields that DataObjects might have.
-     */
-    public abstract void Initialise();
-
-
-    /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
      * Called on creation of a new instance of this object - set default values to all relevant
      * public fields.
      *
