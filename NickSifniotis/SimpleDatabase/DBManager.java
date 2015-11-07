@@ -5,13 +5,37 @@ import java.sql.*;
 
 /**
  * Created by nsifniotis on 31/08/15.
+ * Revised on 08/11/2015
  *
- * Wrapper class for interfacing with the database.
- * No special functionality is supplied other than abstracting away the connection deets
+ * Wrapper class for interfacing with the SQLite database.
  *
  */
 public class DBManager
 {
+    private static String database_path = "database";
+    private static String database_name = "database.db";
+
+
+    /**
+     * Nick Sifniotis u5809912
+     * 08/11/2015
+     *
+     * Changes the location and name of the database file.
+     *
+     * If you are going to change the database from the default database/database.db,
+     * make sure that you call this function when you initialise your program, before you attempt
+     * to perform any operations on the database.
+     *
+     * @param new_path - the path where the database file will be located, without the trailing '/'
+     * @param new_name - the name of the database file
+     */
+    public static void SetDBLocation (String new_path, String new_name)
+    {
+        database_name = new_name;
+        database_path = new_path;
+    }
+
+
     /**
      * Nick Sifniotis u5809912
      * 31/08/2015
@@ -20,8 +44,9 @@ public class DBManager
      * No safety checks whatsoever are conducted on the query string. Use with caution!
      *
      * @param query - the query to execute
+     * @throws SQLException - this static class handles no exceptions.
      */
-    public static void Execute (String query)
+    public static void Execute (String query) throws SQLException
     {
         Connection connection = null;
         Statement statement = null;
@@ -31,10 +56,6 @@ public class DBManager
             connection = Connect();
             statement = connection.createStatement();
             statement.execute(query);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
         finally
         {
@@ -53,46 +74,36 @@ public class DBManager
      *
      * @param query the query to execute
      * @return the pri key of the newly created row
+     * @throws SQLException - this class does not handle faulty queries
      */
-    public static int ExecuteReturnKey (String query)
+    public static int ExecuteReturnKey (String query) throws SQLException
     {
         int res = -1;
-        Connection connection = Connect();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet generated_keys = null;
 
-        if (connection != null)
+        try
         {
-            try
-            {
-                PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                int affected_rows = statement.executeUpdate();
+            connection = Connect();
+            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            int affected_rows = statement.executeUpdate();
 
-                if (affected_rows != 1)
-                {
-                    String error = "DBManager.ExecuteReturnKey - Insert into database failed. Affected rows: " + affected_rows + ": " + query;
-                    System.out.println(error);
-                }
-                else
-                {
-                    try (ResultSet generatedKeys = statement.getGeneratedKeys())
-                    {
-                        if (generatedKeys.next())
-                        {
-                            res = generatedKeys.getInt(1);
-                        }
-                        else
-                        {
-                            throw new SQLException("DBManager.ExecuteReturnKey - Creating user failed, no ID obtained.");
-                        }
-                    }
-                }
+            if (affected_rows != 1)
+                throw new SQLException("DBManager.ExecuteReturnKey - Insert into database failed. Affected rows: " + affected_rows + ": " + query);
 
-                Disconnect (connection);
-            }
-            catch (Exception e)
-            {
-                String error = "DBManager.ExecuteReturnKey - Error executing SQL query: " + query + ": " + e;
-                System.out.println (error);
-            }
+            generated_keys = statement.getGeneratedKeys();
+
+            if (generated_keys.next())
+                res = generated_keys.getInt(1);
+            else
+                throw new SQLException("DBManager.ExecuteReturnKey - Creating user failed, no ID obtained.");
+        }
+        finally
+        {
+            closeQuietly(generated_keys);
+            closeQuietly(statement);
+            closeQuietly(connection);
         }
 
         return res;
@@ -109,24 +120,14 @@ public class DBManager
      *
      * @param query - the SELECT query to execute
      * @return - the results of the query
+     * @throws SQLException - this class does not handle exceptions
      */
-    public static ResultSet ExecuteQuery (String query, Connection connection)
+    public static ResultSet ExecuteQuery (String query, Connection connection) throws SQLException
     {
         ResultSet results = null;
 
         if (connection != null)
-        {
-            try
-            {
-                Statement statement = connection.createStatement();
-                results = statement.executeQuery(query);
-            }
-            catch (Exception e)
-            {
-                String error = "DBManager.ExecuteQuery - Error executing SQL query. Query: " + query + " Exception: " + e;
-                System.out.println(error);
-            }
-        }
+            results = connection.createStatement().executeQuery(query);
 
         return results;
     }
@@ -140,19 +141,19 @@ public class DBManager
      * Returns a connection object that can be used to process SQL and so forth.
      *
      * @return a connection object that is connected to the database. Remember to close when finished!
+     * @throws SQLException - SQL Exceptions aren't handled by this class.
      */
-    public static Connection Connect()
+    public static Connection Connect() throws SQLException
     {
         Connection connection = null;
         try
         {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:database/database.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + database_path + "/" + database_name);
         }
-        catch (Exception e)
+        catch (ClassNotFoundException e)
         {
-            String error = "DBManager.Connect - Exception connecting to tournament database: " + e;
-            System.out.println(error);
+            e.printStackTrace();
         }
 
         return connection;
