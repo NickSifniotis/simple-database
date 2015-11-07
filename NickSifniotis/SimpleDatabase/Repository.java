@@ -3,6 +3,7 @@ package NickSifniotis.SimpleDatabase;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,9 +16,6 @@ import java.util.List;
  */
 public class Repository
 {
-    // This is probably a really shitty way to do it, but Java does not provide an easy way
-    // to find all the subclasses of a given class.
-    private static String [] class_names = { "OminoPiece" };
     private static HashMap<String, String> field_mapping;
     private static boolean initialised = false;
 
@@ -100,14 +98,14 @@ public class Repository
         List<DataObject> result_list = new LinkedList<>();
         String query = "SELECT * FROM " + object_type.getSimpleName();
 
-        Connection connection = DBManager.Connect();
+        Connection connection = null;
+        ResultSet results = null;
         try
         {
-            ResultSet results = DBManager.ExecuteQuery(query, connection);
+            connection = DBManager.Connect();
+            results = DBManager.ExecuteQuery(query, connection);
             while (results.next())
-            {
                 result_list.add(Load(object_type, results));
-            }
         }
         catch (Exception e)
         {
@@ -115,6 +113,7 @@ public class Repository
         }
         finally
         {
+            DBManager.Disconnect(results);
             DBManager.Disconnect(connection);
         }
 
@@ -242,22 +241,29 @@ public class Repository
 
         // second step - build and execute the SQL queries.
         // as I said above, it's fundamentally different for INSERT and UPDATE
-        if (object.PrimaryKey == -1)
-        {
+        if (object.PrimaryKey == -1) {
             // this is an insert operation
             String query = "INSERT INTO " + table_name + "(";
 
-            for (int i = 0; i < col_names.length; i ++)
+            for (int i = 0; i < col_names.length; i++)
                 query += col_names[i] + (i < (col_names.length - 1) ? ", " : "");
 
             query += ") VALUES (";
 
-            for (int i = 0; i < col_values.length; i ++)
+            for (int i = 0; i < col_values.length; i++)
                 query += col_values[i] + (i < (col_values.length - 1) ? ", " : "");
 
             query += ");";
 
-            object.PrimaryKey = DBManager.ExecuteReturnKey(query);
+            try
+            {
+                object.PrimaryKey = DBManager.ExecuteReturnKey(query);
+            }
+            catch (Exception e)
+            {
+                System.out.println("SQL error on insert.");
+                e.printStackTrace();
+            }
         }
         else
         {
@@ -269,7 +275,15 @@ public class Repository
 
             query += " WHERE PrimaryKey = " + String.valueOf(object.PrimaryKey);
 
-            DBManager.Execute(query);
+            try
+            {
+                DBManager.Execute(query);
+            }
+            catch (Exception e)
+            {
+                System.out.println("SQL error on update.");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -308,9 +322,7 @@ public class Repository
 
 
         String table_name = object_type.getSimpleName();
-        String query = "DROP TABLE IF EXISTS " + table_name;
-
-        DBManager.Execute(query);
+        DeleteTable(table_name);
     }
 
 
@@ -330,7 +342,15 @@ public class Repository
 
         String query = "DROP TABLE IF EXISTS " + table_name;
 
-        DBManager.Execute(query);
+        try
+        {
+            DBManager.Execute(query);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL error on drop table " + table_name);
+            e.printStackTrace();
+        }
     }
 
 
@@ -372,7 +392,15 @@ public class Repository
 
 
         // GO GO GO
-        DBManager.Execute(query);
+        try
+        {
+            DBManager.Execute(query);
+        }
+        catch (Exception e)
+        {
+            System.out.println("SQL error on create table " + table_name);
+            e.printStackTrace();
+        }
     }
 
 

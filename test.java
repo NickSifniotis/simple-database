@@ -1,3 +1,4 @@
+import NickSifniotis.SimpleDatabase.DataObject;
 import NickSifniotis.SimpleDatabase.Repository;
 
 /**
@@ -16,9 +17,12 @@ public class test
         item.age = 10;
         Repository.Save(item);
 
-        TestDataObject[] items = (TestDataObject[]) Repository.LoadAll(TestDataObject.class);
+        DataObject[] items = Repository.LoadAll(TestDataObject.class);
 
-        for (TestDataObject thing: items)
+        for (DataObject t: items)
+        {
+            TestDataObject thing = (TestDataObject) t;
             System.out.println(thing.name + ":" + thing.age);
+        }
     }
 }
