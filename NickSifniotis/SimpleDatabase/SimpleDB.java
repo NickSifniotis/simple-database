@@ -12,11 +12,17 @@ import java.util.List;
 
 
 /**
+ * <p>
+ *     This static class contains all the methods for loading and saving DataObject descendants to the database.
+ * </p>
+ * <p>
+ *     DataObjects contain the data that you want to store in the database. See DataObjects for more information about
+ *     creating and working with them. This class assumes that you have created your child objects and provides you
+ *     with the methods that you need to save and load them to your database.
+ * </p>
+ *
  * @author Nick Sifniotis u5809912
  * @since 06/11/2015
- *
- * This class contains all the methods for loading and saving DataObject descendants
- * to the database.
  */
 public class SimpleDB
 {
@@ -42,10 +48,25 @@ public class SimpleDB
 
 
     /**
-     * Loads a DataObject object from the database by Primary Key
+     * Loads a DataObject object from the database by Primary Key. As the object returned is a DataObject,
+     * you will need to cast it into your class to access its fields.
      *
-     * @param object_type - the type of object to load
-     * @param pri_key - the primary key of the object to retrieve
+     * Typical usage is as below:
+     *
+     * <code>
+     *     public class Person extends DataObject
+     *     {
+     *         public StringColumn Name = new StringColumn();
+     *
+     *         ... etc
+     *     }
+     *
+     *     Person my_person = (Person) SimpleDB.Load (Person.class, 3);
+     *     // person now contains the database row corresponding to PriKey 3
+     * </code>
+     *
+     * @param object_type The type of object to load.
+     * @param pri_key The primary key of the object to retrieve.
      */
     public static DataObject Load(Class object_type, int pri_key)
     {
@@ -82,8 +103,8 @@ public class SimpleDB
     /**
      * Loads all items from this class's table.
      *
-     * @param object_type - the type of objects to load / the table to load from
-     * @return an array of all the loaded things.
+     * @param object_type The type of objects to load
+     * @return An array of all the loaded objects.
      */
     public static DataObject[] LoadAll(Class object_type)
     {
