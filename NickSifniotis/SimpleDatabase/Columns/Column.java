@@ -1,13 +1,13 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
- * @author Nick Sifniotis u5809912
- * @since 09/11/2015
- * @version 1.0.0
- *
  * This class represents a field in an object and also a column in a table.
  *
  * Too abstract for you? You shouldn't be looking at the implementation of this class to begin with.
+ *
+ * @author Nick Sifniotis u5809912
+ * @since 09/11/2015
+ * @version 1.0.0
  */
 public abstract class Column
 {
@@ -15,9 +15,19 @@ public abstract class Column
 
 
     /**
-     * Getter/setter functions for __my_name
+     * Gets this column's name. This method is used by the SQL query generation code.
+     *
+     * @return The name of the column, as a string.
      */
     public String Name() { return this.__my_name; }
+
+
+    /**
+     * Sets this column's name. The database manager is responsible for setting the column names
+     * of each column in DataObject instances immediately after construction. You should not ever need to call it.
+     *
+     * @param s The name of this column.
+     */
     public void SetName(String s) { this.__my_name = s; }
 
 

@@ -1,11 +1,11 @@
 package NickSifniotis.SimpleDatabase.Queries;
 
 /**
+ * Simple enumeration constants for SQL ORDER BY clauses.
+ *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * Simple enumeration constants for SQL ORDER BY clauses.
  */
 public enum Ordering
 {
@@ -13,7 +13,6 @@ public enum Ordering
 
 
     /**
-     *
      * @return The SQL query fragment that this enumeration represents.
      */
     public String SQL()

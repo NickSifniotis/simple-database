@@ -1,11 +1,11 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
+ * A simple Integer column type for SimpleDB DataObjects.
+ *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * A class that represents an integer field / table column.
  */
 public class IntegerColumn extends Column
 {

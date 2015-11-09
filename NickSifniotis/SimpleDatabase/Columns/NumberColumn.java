@@ -1,12 +1,11 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
+ * Represents a real number column in the database.
+ *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * Represents a real number column in the database.
- *
  */
 public class NumberColumn extends Column
 {

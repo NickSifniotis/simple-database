@@ -3,12 +3,12 @@ package NickSifniotis.SimpleDatabase.Queries;
 import NickSifniotis.SimpleDatabase.Columns.Column;
 
 /**
+ * This query fragment allows you to select the sort ordering of the data
+ * extracted from the database.
+ *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * This query fragment allows you to select the sort ordering of the data
- * extracted from the database.
  *
  */
 public class OrderingQuery extends Query

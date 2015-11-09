@@ -1,11 +1,11 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
+ * A class that is a string field / table column.
+ *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * A class that is a string field / table column.
  */
 public class TextColumn extends Column
 {

@@ -1,11 +1,11 @@
 package NickSifniotis.SimpleDatabase.Queries;
 
 /**
+ * Base class for ORDER and WHERE clause fragments.
+ *
  * @author Nick Sifniotis 5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * Base class for ORDER and WHERE clause fragments.
  *
  */
 public abstract class Query

@@ -1,12 +1,11 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
+ * A vanilla Boolean column type for SimpleDB DataObjects.
+ *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
  * @version 1.0.0
- *
- * Provides a generic boolean column type.
- *
  */
 public class BooleanColumn extends Column
 {
