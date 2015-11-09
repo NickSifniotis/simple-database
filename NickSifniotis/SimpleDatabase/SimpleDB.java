@@ -22,6 +22,14 @@ public class SimpleDB
     private static boolean initialised = false;
 
 
+    /**
+     * Nick Sifniotis u5809912
+     * 09/11/2015
+     *
+     * Initialises the mapping that connects Column descendants with their corresponding
+     * database data types. This probably belongs in the child classes themselves.
+     * @TODO: read that and implement.
+     */
     public static void Initialise()
     {
         field_mapping = new HashMap<>();
@@ -31,6 +39,47 @@ public class SimpleDB
         field_mapping.put("TextColumn", "TEXT");
 
         initialised = true;
+    }
+
+
+    /**
+     * Nick Sifniotis u5809912
+     * 09/11/2015
+     *
+     * Loads an object by Primary Key
+     *
+     * @param object_type - the sort of object / table to look for
+     * @param pri_key - the prikey of the object to retrieve
+     */
+    public static DataObject Load(Class object_type, int pri_key)
+    {
+        if (!initialised)
+            Initialise();
+
+
+        DataObject result = null;
+        String query = "SELECT * FROM " + object_type.getSimpleName() + " WHERE PrimaryKey = " + String.valueOf(pri_key);
+
+        Connection connection = null;
+        ResultSet results = null;
+        try
+        {
+            connection = DBManager.Connect();
+            results = DBManager.ExecuteQuery(query, connection);
+            if (results.next())
+                result = __load_from_db(object_type, results);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            DBManager.Disconnect(results);
+            DBManager.Disconnect(connection);
+        }
+
+        return result;
     }
 
 
@@ -59,7 +108,7 @@ public class SimpleDB
             connection = DBManager.Connect();
             results = DBManager.ExecuteQuery(query, connection);
             while (results.next())
-                result_list.add(Load(object_type, results));
+                result_list.add(__load_from_db(object_type, results));
         }
         catch (Exception e)
         {
@@ -75,45 +124,6 @@ public class SimpleDB
         return result_list.toArray(res);
     }
 
-
-    /**
-     * Nick Sifniotis u5809912
-     * 07/11/2015
-     *
-     * Loads all of this object's fields from the given dataset.
-     * The field names - which it obtains through a bit of reflection -
-     * form the names of the database columns. Brilliant, no?
-     *
-     * @param object_type - the type of object to load / the table to load from
-     * @param dataset     - the database recordset to load data from.
-     */
-    public static DataObject Load(Class object_type, ResultSet dataset)
-    {
-        if (!initialised)
-            Initialise();
-
-
-        DataObject result = null;
-        try
-        {
-            result = (DataObject) object_type.newInstance();
-
-            ColumnPair[] fields = __get_object_fields(result);
-            if (fields == null)
-                return null;
-
-            for (ColumnPair f: fields)
-                f.Column.DBUpdateValue(dataset.getString(f.ColumnName));
-
-            result.PrimaryKey = dataset.getInt("PrimaryKey");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
 
     /**
@@ -231,32 +241,7 @@ public class SimpleDB
 
 
         String table_name = object_type.getSimpleName();
-        DeleteTable(table_name);
-    }
-
-
-    /**
-     * Nick Sifinotis u5809912
-     * 06/11/2015
-     *
-     * Drops a table from the database, but by table name, not class type.
-     *
-     * @param table_name - the table to delete.
-     */
-    public static void DeleteTable(String table_name)
-    {
-        if (!initialised)
-            Initialise();
-
-
-        String query = "DROP TABLE IF EXISTS " + table_name;
-
-        try {
-            DBManager.Execute(query);
-        } catch (SQLException e) {
-            System.out.println("SQL error on drop table " + table_name);
-            e.printStackTrace();
-        }
+        __delete_table_by_name(table_name);
     }
 
 
@@ -283,7 +268,7 @@ public class SimpleDB
 
 
         // if it exists, drop the old table
-        DeleteTable(table_name);
+        __delete_table_by_name(table_name);
 
 
         // construct the SQL query.
@@ -428,5 +413,70 @@ public class SimpleDB
                 res = true;
 
         return res;
+    }
+
+
+    /**
+     * Nick Sifinotis u5809912
+     * 06/11/2015
+     *
+     * Drops a table from the database, but by table name, not class type.
+     *
+     * @param table_name - the table to delete.
+     */
+    private static void __delete_table_by_name(String table_name)
+    {
+        if (!initialised)
+            Initialise();
+
+
+        String query = "DROP TABLE IF EXISTS " + table_name;
+
+        try {
+            DBManager.Execute(query);
+        } catch (SQLException e) {
+            System.out.println("SQL error on drop table " + table_name);
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Nick Sifniotis u5809912
+     * 07/11/2015
+     *
+     * Loads all of this object's fields from the given dataset.
+     * The field names - which it obtains through a bit of reflection -
+     * form the names of the database columns. Brilliant, no?
+     *
+     * @param object_type - the type of object to load / the table to load from
+     * @param dataset     - the database recordset to load data from.
+     */
+    private static DataObject __load_from_db(Class object_type, ResultSet dataset)
+    {
+        if (!initialised)
+            Initialise();
+
+
+        DataObject result = null;
+        try
+        {
+            result = (DataObject) object_type.newInstance();
+
+            ColumnPair[] fields = __get_object_fields(result);
+            if (fields == null)
+                return null;
+
+            for (ColumnPair f: fields)
+                f.Column.DBUpdateValue(dataset.getString(f.ColumnName));
+
+            result.PrimaryKey = dataset.getInt("PrimaryKey");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }
