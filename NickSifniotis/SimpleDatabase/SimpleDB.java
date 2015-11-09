@@ -2,9 +2,6 @@ package NickSifniotis.SimpleDatabase;
 
 import NickSifniotis.SimpleDatabase.Columns.Column;
 import NickSifniotis.SimpleDatabase.Columns.ColumnPair;
-import NickSifniotis.SimpleDatabase.Columns.IntegerColumn;
-import NickSifniotis.SimpleDatabase.Columns.TextColumn;
-
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,7 +16,7 @@ import java.util.List;
  * This class contains all the methods for loading and saving DataObjects and their children
  * to the database itself.
  */
-public class DataObjectFactory
+public class SimpleDB
 {
     private static HashMap<String, String> field_mapping;
     private static boolean initialised = false;
@@ -29,9 +26,8 @@ public class DataObjectFactory
     {
         field_mapping = new HashMap<>();
         field_mapping.put("IntegerColumn", "INTEGER");
-        field_mapping.put("boolean", "INTEGER");
-        field_mapping.put("float", "REAL");
-        field_mapping.put("double", "REAL");
+        field_mapping.put("BooleanColumn", "INTEGER");
+        field_mapping.put("NumberColumn", "REAL");
         field_mapping.put("TextColumn", "TEXT");
 
         initialised = true;
@@ -107,18 +103,7 @@ public class DataObjectFactory
                 return null;
 
             for (ColumnPair f: fields)
-            {
-                if (f.Column instanceof IntegerColumn)
-                {
-                    IntegerColumn ic = (IntegerColumn) f.Column;
-                    ic.Value = dataset.getInt(f.ColumnName);
-                }
-                else if (f.Column instanceof TextColumn)
-                {
-                    TextColumn sc = (TextColumn) f.Column;
-                    sc.Value = dataset.getString(f.ColumnName);
-                }
-            }
+                f.Column.DBUpdateValue(dataset.getString(f.ColumnName));
         }
         catch (Exception e)
         {
@@ -426,7 +411,7 @@ public class DataObjectFactory
      * Tests to determine whether or not the class that has been passed to this function
      * is a descendant of DataObject.
      *
-     * DataObjectFactory is only able to work with descendants of that class.
+     * SimpleDB is only able to work with descendants of that class.
      *
      * @param unknown - the mystery class
      * @return True if the class is a valid descendant, false otherwise.

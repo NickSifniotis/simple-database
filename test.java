@@ -1,5 +1,5 @@
 import NickSifniotis.SimpleDatabase.DataObject;
-import NickSifniotis.SimpleDatabase.DataObjectFactory;
+import NickSifniotis.SimpleDatabase.SimpleDB;
 
 /**
  * Created by nsifniotis on 8/11/15.
@@ -10,16 +10,16 @@ public class test
 {
     public static void main(String[] args)
     {
-        DataObjectFactory.CreateTable(TestDataObject.class);
-        TestDataObject item = (TestDataObject) DataObjectFactory.New(TestDataObject.class);
+        SimpleDB.CreateTable(TestDataObject.class);
+        TestDataObject item = (TestDataObject) SimpleDB.New(TestDataObject.class);
 
         if (item != null)
         {
             item.FirstName.Value = "John";
             item.Age.Value = 10;
-            DataObjectFactory.Save(item);
+            SimpleDB.Save(item);
 
-            DataObject[] items = DataObjectFactory.LoadAll(TestDataObject.class);
+            DataObject[] items = SimpleDB.LoadAll(TestDataObject.class);
 
             for (DataObject t : items)
             {
