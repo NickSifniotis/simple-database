@@ -1,7 +1,9 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
- * Created by nsifniotis on 9/11/15.
+ * @author Nick Sifniotis u5809912
+ * @since 09/11/2015
+ * @version 1.0.0
  *
  * This class represents a field in an object and also a column in a table.
  *
@@ -13,9 +15,6 @@ public abstract class Column
 
 
     /**
-     * Nick Sifnitois u5809912
-     * 09/11/2015
-     *
      * Getter/setter functions for __my_name
      */
     public String Name() { return this.__my_name; }
@@ -23,21 +22,15 @@ public abstract class Column
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Children implement this method to return a string that can be injected directly into an
      * SQL statement, representing the current value of this field.
      *
-     * @return the current value of this field, as a string that can be inserted into SQL.
+     * @return the current value of this field as a string that can be inserted into an SQL query.
      */
     public abstract String SQLFieldValue();
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Children implement this method to update their current value from the data extracted from the DB.
      * The data will be passed through as a string, it is up to the child class to parse the data correctly.
      *

@@ -1,7 +1,9 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
- * Created by nsifniotis on 9/11/15.
+ * @author Nick Sifniotis u5809912
+ * @since 09/11/2015
+ * @version 1.0.0
  *
  * A class that represents an integer field / table column.
  */
@@ -11,9 +13,6 @@ public class IntegerColumn extends Column
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * @return the current value of this field, in an SQL-happy format.
      */
     @Override
@@ -24,9 +23,6 @@ public class IntegerColumn extends Column
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Updates this field with data
      *
      * @param new_value - the value returned from the database.
