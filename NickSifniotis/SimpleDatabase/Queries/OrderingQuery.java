@@ -24,7 +24,7 @@ public class OrderingQuery extends Query
         __order = ord;
         __column_name = col;
     }
-    
+
 
     /**
      * Nick Sifniotis u5809912

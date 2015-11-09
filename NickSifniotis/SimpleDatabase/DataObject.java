@@ -1,7 +1,9 @@
 package NickSifniotis.SimpleDatabase;
 
 
-import java.util.HashMap;
+import NickSifniotis.SimpleDatabase.Columns.Column;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by nsifniotis on 6/11/15.
@@ -16,6 +18,33 @@ public abstract class DataObject
 {
     public int PrimaryKey;
 
+
+    /**
+     * Nick Sifniotis u5809912
+     * 09/11/2015
+     *
+     * The DataObject needs to be teach its columns to identify themselves.
+     * This is ugly, repetitive data but for the moment it's the best model I've got
+     * @TODO find a better model.
+     */
+    public void SetColumnNames()
+    {
+        // this will be interesting
+        Field[] fields = this.getClass().getFields();
+
+        try
+        {
+            for (Field f : fields)
+            {
+                Column col = (Column) f.get(this);
+                col.SetName(f.getName());
+            }
+        }
+        catch (Exception e)
+        {
+            // no fucks given here
+        }
+    }
 
     /**
      * Nick Sifniotis u5809912

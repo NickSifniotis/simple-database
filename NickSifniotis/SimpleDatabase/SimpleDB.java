@@ -249,7 +249,7 @@ public class SimpleDB
      * Nick Sifniotis u5809912
      * 09/11/2015
      *
-     * Creates a table in the database whos schema conforms to the fields declared in the class object_type
+     * Creates a table in the database who's schema conforms to the fields declared in the class object_type
      *
      * @param object_type - the class that contains the metadata for the table construction.
      */
@@ -313,6 +313,7 @@ public class SimpleDB
         try
         {
             new_instance = (DataObject) object_type.newInstance();
+            new_instance.SetColumnNames();
         }
         catch (Exception e)
         {
@@ -320,11 +321,8 @@ public class SimpleDB
             return null;
         }
 
-        if (new_instance != null)
-        {
-            new_instance.SetDefaults();
-            Save(new_instance);
-        }
+        new_instance.SetDefaults();
+        Save(new_instance);
 
         return new_instance;
     }
@@ -462,6 +460,7 @@ public class SimpleDB
         try
         {
             result = (DataObject) object_type.newInstance();
+            result.SetColumnNames();
 
             ColumnPair[] fields = __get_object_fields(result);
             if (fields == null)

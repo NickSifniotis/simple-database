@@ -9,6 +9,19 @@ package NickSifniotis.SimpleDatabase.Columns;
  */
 public abstract class Column
 {
+    private String __my_name;
+
+
+    /**
+     * Nick Sifnitois u5809912
+     * 09/11/2015
+     *
+     * Getter/setter functions for __my_name
+     */
+    public String Name() { return this.__my_name; }
+    public void SetName(String s) { this.__my_name = s; }
+
+
     /**
      * Nick Sifniotis u5809912
      * 09/11/2015
