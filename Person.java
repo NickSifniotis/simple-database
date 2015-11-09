@@ -8,7 +8,7 @@ import NickSifniotis.SimpleDatabase.DataObject;
  * Realllllllly simple test object to make sure the DBManager is working ok.
  *
  */
-public class TestDataObject extends DataObject
+public class Person extends DataObject
 {
     public TextColumn FirstName = new TextColumn();
     public TextColumn Surname = new TextColumn();

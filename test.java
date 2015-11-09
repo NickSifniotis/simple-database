@@ -1,3 +1,4 @@
+import NickSifniotis.SimpleDatabase.DataObject;
 import NickSifniotis.SimpleDatabase.SimpleDB;
 
 /**
@@ -9,7 +10,14 @@ public class test
 {
     public static void main(String[] args)
     {
-        TestDataObject obj = (TestDataObject) SimpleDB.Load(TestDataObject.class, 2);
+        Person p = (Person) SimpleDB.New(Person.class);
 
+        DataObject[] objs = SimpleDB.LoadAll(Person.class);
+
+        for (DataObject o: objs)
+        {
+            Person obj = (Person) o;
+            System.out.println(obj.PrimaryKey + ": " + obj.FirstName.Value);
+        }
     }
 }

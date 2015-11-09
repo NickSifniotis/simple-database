@@ -1,7 +1,6 @@
 package NickSifniotis.SimpleDatabase;
 
 import NickSifniotis.SimpleDatabase.Columns.Column;
-import NickSifniotis.SimpleDatabase.Columns.ColumnPair;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -146,15 +145,7 @@ public class SimpleDB
 
         // first step - extract the relevant data from the class and the instance itself.
         String table_name = object.getClass().getSimpleName();
-        ColumnPair[] fields = __get_object_fields(object);
-        String[] col_names = new String[fields.length];
-        String[] col_values = new String[fields.length];
-
-        for (int i = 0; i < fields.length; i++)
-        {
-            col_names[i] = fields[i].ColumnName;
-            col_values[i] = fields[i].Column.SQLFieldValue();
-        }
+        Column[] fields = __get_object_fields(object);
 
 
         // second step - build and execute the SQL queries.
@@ -164,13 +155,13 @@ public class SimpleDB
             // this is an insert operation
             String query = "INSERT INTO " + table_name + "(";
 
-            for (int i = 0; i < col_names.length; i++)
-                query += col_names[i] + (i < (col_names.length - 1) ? ", " : "");
+            for (int i = 0; i < fields.length; i++)
+                query += fields[i].Name() + (i < (fields.length - 1) ? ", " : "");
 
             query += ") VALUES (";
 
-            for (int i = 0; i < col_values.length; i++)
-                query += col_values[i] + (i < (col_values.length - 1) ? ", " : "");
+            for (int i = 0; i < fields.length; i++)
+                query += fields[i].SQLFieldValue() + (i < (fields.length - 1) ? ", " : "");
 
             query += ");";
 
@@ -189,8 +180,8 @@ public class SimpleDB
             // this is an update
             String query = "UPDATE " + table_name + " SET ";
 
-            for (int i = 0; i < col_names.length; i++)
-                query += col_names[i] + " = " + col_values[i] + (i < (col_names.length - 1) ? ", " : "");
+            for (int i = 0; i < fields.length; i++)
+                query += fields[i].Name() + " = " + fields[i].SQLFieldValue() + (i < (fields.length - 1) ? ", " : "");
 
             query += " WHERE PrimaryKey = " + String.valueOf(object.PrimaryKey);
 
@@ -336,27 +327,27 @@ public class SimpleDB
      * @param object - the DataObject who's fields we want
      * @return - an array of all Columns (or descendants) found in that object.
      */
-    public static ColumnPair[] __get_object_fields(DataObject object)
+    public static Column[] __get_object_fields(DataObject object)
     {
         // perform basic validation to ensure that we are not trying to save a class type that is
         // not a child class of DataObject.
         if (!__validate_descendant_of_dataobject(object.getClass()))
-            return null;
+            return new Column[0];
 
         Field[] holding_array = object.getClass().getDeclaredFields();
-        List<ColumnPair> holding_list = new LinkedList<>();
+        List<Column> holding_list = new LinkedList<>();
 
         try
         {
             for (Field f : holding_array)
-                holding_list.add(new ColumnPair(f.getName(), (Column) f.get(object)));
+                holding_list.add((Column) f.get(object));
         }
         catch (Exception e)
         {
             // do nothing
         }
 
-        ColumnPair[] results = new ColumnPair[holding_list.size()];
+        Column[] results = new Column[holding_list.size()];
         return holding_list.toArray(results);
     }
 
@@ -462,12 +453,12 @@ public class SimpleDB
             result = (DataObject) object_type.newInstance();
             result.SetColumnNames();
 
-            ColumnPair[] fields = __get_object_fields(result);
+            Column[] fields = __get_object_fields(result);
             if (fields == null)
                 return null;
 
-            for (ColumnPair f: fields)
-                f.Column.DBUpdateValue(dataset.getString(f.ColumnName));
+            for (Column f: fields)
+                f.DBUpdateValue(dataset.getString(f.Name()));
 
             result.PrimaryKey = dataset.getInt("PrimaryKey");
         }

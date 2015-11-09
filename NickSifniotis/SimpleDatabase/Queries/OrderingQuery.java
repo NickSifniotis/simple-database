@@ -1,5 +1,7 @@
 package NickSifniotis.SimpleDatabase.Queries;
 
+import NickSifniotis.SimpleDatabase.Columns.Column;
+
 /**
  * Created by nsifniotis on 9/11/15.
  *
@@ -10,7 +12,7 @@ package NickSifniotis.SimpleDatabase.Queries;
 public class OrderingQuery extends Query
 {
     private Ordering __order;
-    private String __column_name;
+    private Column __column;
 
 
     /**
@@ -19,10 +21,10 @@ public class OrderingQuery extends Query
      *
      * Constructor.
      */
-    public OrderingQuery (String col, Ordering ord)
+    public OrderingQuery (Column col, Ordering ord)
     {
         __order = ord;
-        __column_name = col;
+        __column = col;
     }
 
 
@@ -35,6 +37,6 @@ public class OrderingQuery extends Query
     @Override
     public String SQL()
     {
-        return __column_name + " " + __order.SQL();
+        return __column.Name() + " " + __order.SQL();
     }
 }
