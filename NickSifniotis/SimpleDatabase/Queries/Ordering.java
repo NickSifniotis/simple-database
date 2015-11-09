@@ -7,5 +7,22 @@ package NickSifniotis.SimpleDatabase.Queries;
  */
 public enum Ordering
 {
-    ASCENDING, DESCENDING
+    ASCENDING, DESCENDING;
+
+    public String SQL()
+    {
+        String res = null;
+
+        switch (this)
+        {
+            case ASCENDING:
+                res = "ASC";
+                break;
+            case DESCENDING:
+                res = "DESC";
+                break;
+        }
+
+        return res;
+    }
 }
