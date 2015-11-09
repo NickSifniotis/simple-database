@@ -15,7 +15,8 @@ import java.util.List;
  * This class contains all the methods for loading and saving DataObjects and their children
  * to the database itself.
  */
-public class DataObjectFactory {
+public class DataObjectFactory
+{
     private static HashMap<String, String> field_mapping;
     private static boolean initialised = false;
 
@@ -41,7 +42,8 @@ public class DataObjectFactory {
      * @param object_type - the type of object to load / the table to load from
      * @return an array of all the loaded things.
      */
-    public static DataObject[] LoadAll(Class object_type) {
+    public static DataObject[] LoadAll(Class object_type)
+    {
         if (!initialised)
             Initialise();
 
@@ -218,7 +220,8 @@ public class DataObjectFactory {
      *
      * @param objects - the list of objects to save.
      */
-    public static void SaveAll(DataObject[] objects) {
+    public static void SaveAll(DataObject[] objects)
+    {
         if (!initialised)
             Initialise();
 
@@ -236,7 +239,8 @@ public class DataObjectFactory {
      *
      * @param object_type - the class that corresponds to the table to drop.
      */
-    public static void DeleteTable(Class object_type) {
+    public static void DeleteTable(Class object_type)
+    {
         if (!initialised)
             Initialise();
 
@@ -254,7 +258,8 @@ public class DataObjectFactory {
      *
      * @param table_name - the table to delete.
      */
-    public static void DeleteTable(String table_name) {
+    public static void DeleteTable(String table_name)
+    {
         if (!initialised)
             Initialise();
 
@@ -270,28 +275,18 @@ public class DataObjectFactory {
     }
 
 
-    public static void CreateTable(Class object_type) {
+    public static void CreateTable(Class object_type)
+    {
         if (!initialised)
             Initialise();
 
 
         // pull out all of the relevant data about the class that we are saving
         String table_name = object_type.getSimpleName();
-        Field[] columns = object_type.getFields();
-        String[] column_declarations = new String[columns.length];
+        String[] column_declarations = __get_column_declarations(object_type);
 
-        for (int i = 0; i < columns.length; i++) {
-            Field f = columns[i];
-            String name = f.getName();
-            String type = f.getType().getSimpleName();
-
-            if (name.equals("PrimaryKey"))
-                type = "INTEGER PRIMARY KEY";
-            else
-                type = field_mapping.get(type);
-
-            column_declarations[i] = name + " " + type;
-        }
+        if (column_declarations == null)
+            return;
 
 
         // if it exists, drop the old table
@@ -300,15 +295,19 @@ public class DataObjectFactory {
 
         // construct the SQL query.
         String query = "CREATE TABLE " + table_name + "(";
-        for (int i = 0; i < column_declarations.length; i++)
-            query += column_declarations[i] + (i < (column_declarations.length - 1) ? ", " : "");
-        query += ");";
+        for (String col: column_declarations)
+            query += col + ", ";
+        query += "PrimaryKey INTEGER PRIMARY KEY);";
 
 
         // GO GO GO
-        try {
+        try
+        {
+            System.out.println(query);
             DBManager.Execute(query);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.out.println("SQL error on create table " + table_name);
             e.printStackTrace();
         }
@@ -381,7 +380,8 @@ public class DataObjectFactory {
      * @param object - the DataObject who's fields we want
      * @return - an array of all Columns (or descendants) found in that object.
      */
-    private static Column[] __get_table_fields(DataObject object) {
+    public static Column[] __get_object_fields(DataObject object)
+    {
         // perform basic validation to ensure that we are not trying to save a class type that is
         // not a child class of DataObject.
         if (!__validate_descendant_of_dataobject(object.getClass()))
@@ -414,7 +414,7 @@ public class DataObjectFactory {
      * @param class_type - the class that we are listing the fields for
      * @return the array of strings
      */
-    private static String[] __get_column_names(Class class_type)
+    public static String[] __get_column_declarations(Class class_type)
     {
         // perform basic validation to ensure that we are not trying to save a class type that is
         // not a child class of DataObject.
@@ -425,8 +425,8 @@ public class DataObjectFactory {
         List<String> holding_list = new LinkedList<>();
 
         for (Field f: holding_array)
-            if (field_mapping.containsKey(f.getClass().getSimpleName()))
-                holding_list.add(f.getName());
+            if (field_mapping.containsKey(f.getType().getSimpleName()))
+                holding_list.add(f.getName() + " " + field_mapping.get(f.getType().getSimpleName()));
 
         String[] results = new String[holding_list.size()];
         return holding_list.toArray(results);

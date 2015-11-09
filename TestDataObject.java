@@ -1,3 +1,5 @@
+import NickSifniotis.SimpleDatabase.Columns.IntegerColumn;
+import NickSifniotis.SimpleDatabase.Columns.StringColumn;
 import NickSifniotis.SimpleDatabase.DataObject;
 
 /**
@@ -8,14 +10,17 @@ import NickSifniotis.SimpleDatabase.DataObject;
  */
 public class TestDataObject extends DataObject
 {
-    public String name;
-    public int age;
+    public StringColumn FirstName = new StringColumn();
+    public StringColumn Surname = new StringColumn();
+    public IntegerColumn Age = new IntegerColumn();
+
 
     @Override
     public void SetDefaults()
     {
         super.SetDefaults();
-        name = "Nick";
-        age = 34;
+        FirstName.Value = "Nick";
+        Surname.Value = "Sifniotis";
+        Age.Value = 34;
     }
 }
