@@ -1,4 +1,4 @@
-package NickSifniotis.SimpleDatabase.Fields;
+package NickSifniotis.SimpleDatabase.Columns;
 
 /**
  * Created by nsifniotis on 9/11/15.
@@ -7,30 +7,8 @@ package NickSifniotis.SimpleDatabase.Fields;
  *
  * Too abstract for you? You shouldn't be looking at the implementation of this class to begin with.
  */
-public abstract class Field
+public abstract class Column
 {
-    private String name;
-
-    public Field (String name)
-    {
-        this.name = name;
-    }
-
-
-    /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
-     * Returns this field's column name.
-     *
-     * @return this field's column name.
-     */
-    public String SQLFieldName()
-    {
-        return this.name;
-    }
-
-
     /**
      * Nick Sifniotis u5809912
      * 09/11/2015

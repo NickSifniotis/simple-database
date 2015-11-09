@@ -1,18 +1,13 @@
-package NickSifniotis.SimpleDatabase.Fields;
+package NickSifniotis.SimpleDatabase.Columns;
 
 /**
  * Created by nsifniotis on 9/11/15.
  *
  * A class that represents an integer field / table column.
  */
-public class IntegerField extends Field
+public class IntegerColumn extends Column
 {
     public int Value;
-
-    public IntegerField(String name)
-    {
-        super(name);
-    }
 
 
     /**

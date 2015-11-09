@@ -1,19 +1,13 @@
-package NickSifniotis.SimpleDatabase.Fields;
+package NickSifniotis.SimpleDatabase.Columns;
 
 /**
  * Created by nsifniotis on 9/11/15.
  *
  * A class that is a string field / table column.
  */
-public class StringField extends Field
+public class StringColumn extends Column
 {
     public String Value;
-    
-
-    public StringField (String name)
-    {
-        super(name);
-    }
 
 
     /**
