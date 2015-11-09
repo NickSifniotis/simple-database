@@ -1,5 +1,5 @@
 import NickSifniotis.SimpleDatabase.DataObject;
-import NickSifniotis.SimpleDatabase.Repository;
+import NickSifniotis.SimpleDatabase.DataObjectFactory;
 
 /**
  * Created by nsifniotis on 8/11/15.
@@ -10,14 +10,14 @@ public class test
 {
     public static void main(String[] args)
     {
-        Repository.CreateTable(TestDataObject.class);
-        TestDataObject item = (TestDataObject) Repository.New(TestDataObject.class);
+        DataObjectFactory.CreateTable(TestDataObject.class);
+        TestDataObject item = (TestDataObject) DataObjectFactory.New(TestDataObject.class);
 
         item.name = "John";
         item.age = 10;
-        Repository.Save(item);
+        DataObjectFactory.Save(item);
 
-        DataObject[] items = Repository.LoadAll(TestDataObject.class);
+        DataObject[] items = DataObjectFactory.LoadAll(TestDataObject.class);
 
         for (DataObject t: items)
         {

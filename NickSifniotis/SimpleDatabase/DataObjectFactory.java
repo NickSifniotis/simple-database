@@ -14,7 +14,7 @@ import java.util.List;
  * This class contains all the methods for loading and saving DataObjects and their children
  * to the database itself.
  */
-public class Repository
+public class DataObjectFactory
 {
     private static HashMap<String, String> field_mapping;
     private static boolean initialised = false;
@@ -35,48 +35,6 @@ public class Repository
         field_mapping.put("String", "TEXT");
 
         initialised = true;
-    }
-
-
-    /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
-     * Creates a new instance of the type of object specified by the user.
-     * Autosets the default values, and saves to the database.
-     * Do not call this method if you do not intend to save the object.
-     *
-     * @param object_type - the type of new object to return.
-     * @return - a new object of that type
-     */
-    public static DataObject New(Class object_type)
-    {
-        if (!initialised)
-            Initialise();
-
-
-        // make sure it's playing by the rules - only descendants of DataObject can be created here.
-        if (!validate_descendant_of_dataobject(object_type))
-            return null;
-
-        DataObject new_instance = null;
-        try
-        {
-            new_instance = (DataObject) object_type.newInstance();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-
-        if (new_instance != null)
-        {
-            new_instance.SetDefaults();
-            Save(new_instance);
-        }
-
-        return new_instance;
     }
 
 
@@ -411,7 +369,7 @@ public class Repository
      * Tests to determine whether or not the class that has been passed to this function
      * is a descendant of DataObject.
      *
-     * Repository is only able to work with descendants of that class.
+     * DataObjectFactory is only able to work with descendants of that class.
      *
      * @param unknown - the mystery class
      * @return True if the class is a valid descendant, false otherwise.
@@ -426,5 +384,42 @@ public class Repository
                 res = true;
 
         return res;
+    }
+
+
+    /**
+     * Nick Sifniotis u5809912
+     * 06/11/2015
+     *
+     * Creates a new instance of the type of object specified by the user.
+     * Autosets the default values, and saves to the database.
+     * Do not call this method if you do not intend to save the object.
+     *
+     * @return - a new object of that type
+     */
+    public static DataObject New(Class object_type)
+    {
+        if (!initialised)
+            Initialise();
+
+
+        DataObject new_instance = null;
+        try
+        {
+            new_instance = (DataObject) object_type.newInstance();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+
+        if (new_instance != null)
+        {
+            new_instance.SetDefaults();
+            Save(new_instance);
+        }
+
+        return new_instance;
     }
 }
