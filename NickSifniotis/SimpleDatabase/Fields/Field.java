@@ -1,4 +1,4 @@
-package NickSifniotis.SimpleDatabase;
+package NickSifniotis.SimpleDatabase.Fields;
 
 /**
  * Created by nsifniotis on 9/11/15.
