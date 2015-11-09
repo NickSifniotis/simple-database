@@ -104,6 +104,8 @@ public class SimpleDB
 
             for (ColumnPair f: fields)
                 f.Column.DBUpdateValue(dataset.getString(f.ColumnName));
+
+            result.PrimaryKey = dataset.getInt("PrimaryKey");
         }
         catch (Exception e)
         {
