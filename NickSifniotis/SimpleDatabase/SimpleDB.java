@@ -1,6 +1,7 @@
 package NickSifniotis.SimpleDatabase;
 
 import NickSifniotis.SimpleDatabase.Columns.Column;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;

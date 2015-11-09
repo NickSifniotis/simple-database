@@ -3,7 +3,9 @@ package NickSifniotis.SimpleDatabase.Queries;
 import NickSifniotis.SimpleDatabase.Columns.Column;
 
 /**
- * Created by nsifniotis on 9/11/15.
+ * @author Nick Sifniotis u5809912
+ * @since 09/11/2015
+ * @version 1.0.0
  *
  * This query fragment allows you to select the sort ordering of the data
  * extracted from the database.
@@ -16,23 +18,21 @@ public class OrderingQuery extends Query
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
+     * Constructor for this OrderingQuery object. Accepts the column that this ordering is to apply
+     * to, and the enumeration that indicates whether it is to be ascending or descending.
      *
-     * Constructor.
+     * @param column - the Column to apply this ordering to
+     * @param order - whether or not to sort small-to-large or large-to-small.
      */
-    public OrderingQuery (Column col, Ordering ord)
+    public OrderingQuery (Column column, Ordering order)
     {
-        __order = ord;
-        __column = col;
+        __order = order;
+        __column = column;
     }
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
-     * @return the bit of SQL that this object represents
+     * @return the SQL that this ordering object represents
      */
     @Override
     public String SQL()
