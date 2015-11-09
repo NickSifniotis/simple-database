@@ -53,7 +53,8 @@ public class SimpleDB
      *
      * Typical usage is as below:
      *
-     * <code>
+     * <pre>
+     * {@code
      *     public class Person extends DataObject
      *     {
      *         public StringColumn Name = new StringColumn();
@@ -63,10 +64,12 @@ public class SimpleDB
      *
      *     Person my_person = (Person) SimpleDB.Load (Person.class, 3);
      *     // person now contains the database row corresponding to PriKey 3
-     * </code>
+     * }
+     * </pre>
      *
      * @param object_type The type of object to load.
      * @param pri_key The primary key of the object to retrieve.
+     * @return An instance of object_type, with current data loaded from the database.
      */
     public static DataObject Load(Class object_type, int pri_key)
     {
@@ -286,11 +289,32 @@ public class SimpleDB
 
 
     /**
-     * Creates a new instance of the type of object specified by the user.
-     * Autosets the default values, and saves to the database.
-     * Do not call this method if you do not intend to save the object.
+     * <p>
+     *      Creates a new instance of the type of object specified by the user.
+     * </p>
+     * <p>
+     *     Creates a new instance of object_type, autosets the default values, and saves to the database.
+     *     Do not call this method if you do not intend to save the object.
+     * </p>
      *
-     * @return - a new object of that type
+     * <p>
+     *     The following code illustrates typical usage, again using the Person class as an example.
+     * </p>
+     *
+     * <pre>
+     * {@code
+     *     Person new_person = (Person) SimpleDB.New (Person.class);
+     *     new_person.FirstName.Value = "Nick";
+     * }
+     * </pre>
+     *
+     * <p>
+     *     Note that as of this time, there is no way to send initialisation values to the new object.
+     *     The object is initialised with the default values provided in the class's SetDefaults() method.
+     * </p>
+     *
+     * @param object_type The type of DataObject to instantiate and initialise.
+     * @return A new object of that type
      */
     public static DataObject New(Class object_type)
     {
@@ -320,7 +344,7 @@ public class SimpleDB
 
 
     /**
-     * Returns a list of Column objects for the given DataObject instance
+     * Returns a list of Column objects for the given DataObject instance.
      *
      * @param object - the DataObject who's fields we want
      * @return - an array of all Columns (or descendants) found in that object.
@@ -351,7 +375,7 @@ public class SimpleDB
 
 
     /**
-     * Returns an array containing the names of every Column type field in the class
+     * Returns an array containing the names of every Column type field in the class.
      *
      * @param class_type - the class that we are listing the fields for
      * @return the array of strings
@@ -381,7 +405,7 @@ public class SimpleDB
      *
      * SimpleDB is only able to work with descendants of that class.
      *
-     * @param unknown - the mystery class
+     * @param unknown The class that is being tested.
      * @return True if the class is a valid descendant, false otherwise.
      */
     private static boolean __validate_descendant_of_dataobject(Class unknown)
@@ -400,7 +424,7 @@ public class SimpleDB
     /**
      * Drops a table from the database, but by table name, not class type.
      *
-     * @param table_name - the table to delete.
+     * @param table_name The table to delete.
      */
     private static void __delete_table_by_name(String table_name)
     {
@@ -424,9 +448,9 @@ public class SimpleDB
      * The field names - which it obtains through a bit of reflection -
      * form the names of the database columns. Brilliant, no?
      *
-     * @param object_type - the type of object to load / the table to load from
-     * @param dataset     - the database recordset to load data from.
-     * @return - an instance of object_type, containing the data loaded from dataset
+     * @param object_type The type of object to load / the table to load from.
+     * @param dataset The database recordset to load data from.
+     * @return An instance of object_type, containing the data loaded from dataset.
      */
     private static DataObject __load_from_db(Class object_type, ResultSet dataset)
     {

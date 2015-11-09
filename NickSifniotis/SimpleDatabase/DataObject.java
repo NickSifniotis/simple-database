@@ -65,7 +65,7 @@ public abstract class DataObject
      * there is no need to override this method.
      *
      * Note that if you do override this, it is imperative that your first line invokes this method.
-     * @code super.SetDefaults();
+     * {@code super.SetDefaults();}
      */
     public void SetDefaults()
     {
