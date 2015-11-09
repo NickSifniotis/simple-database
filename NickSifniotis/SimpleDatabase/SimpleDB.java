@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
- * Created by nsifniotis on 6/11/15.
+ * @author Nick Sifniotis u5809912
+ * @since 06/11/2015
  *
- * This class contains all the methods for loading and saving DataObjects and their children
- * to the database itself.
+ * This class contains all the methods for loading and saving DataObject descendants
+ * to the database.
  */
 public class SimpleDB
 {
@@ -22,9 +24,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Initialises the mapping that connects Column descendants with their corresponding
      * database data types. This probably belongs in the child classes themselves.
      * @TODO: read that and implement.
@@ -42,13 +41,10 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
+     * Loads a DataObject object from the database by Primary Key
      *
-     * Loads an object by Primary Key
-     *
-     * @param object_type - the sort of object / table to look for
-     * @param pri_key - the prikey of the object to retrieve
+     * @param object_type - the type of object to load
+     * @param pri_key - the primary key of the object to retrieve
      */
     public static DataObject Load(Class object_type, int pri_key)
     {
@@ -83,12 +79,9 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 07/11/2015
+     * Loads all items from this class's table.
      *
-     * Loads all items from this class's table. Maybe.
-     *
-     * @param object_type - the type of object to load / the table to load from
+     * @param object_type - the type of objects to load / the table to load from
      * @return an array of all the loaded things.
      */
     public static DataObject[] LoadAll(Class object_type)
@@ -126,9 +119,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
      * Saves the object into the database.
      *
      * @param object - the object to save.
@@ -199,9 +189,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
      * Saves all of the objects into the database.
      *
      * @param objects - the list of objects to save.
@@ -218,9 +205,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
      * Drops the table for the given object type from the database. Bye bye data.
      *
      * @param object_type - the class that corresponds to the table to drop.
@@ -237,9 +221,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Creates a table in the database who's schema conforms to the fields declared in the class object_type
      *
      * @param object_type - the class that contains the metadata for the table construction.
@@ -283,9 +264,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
      * Creates a new instance of the type of object specified by the user.
      * Autosets the default values, and saves to the database.
      * Do not call this method if you do not intend to save the object.
@@ -320,14 +298,12 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Returns a list of Column objects for the given DataObject instance
+     *
      * @param object - the DataObject who's fields we want
      * @return - an array of all Columns (or descendants) found in that object.
      */
-    public static Column[] __get_object_fields(DataObject object)
+    private static Column[] __get_object_fields(DataObject object)
     {
         // perform basic validation to ensure that we are not trying to save a class type that is
         // not a child class of DataObject.
@@ -353,9 +329,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 09/11/2015
-     *
      * Returns an array containing the names of every Column type field in the class
      *
      * @param class_type - the class that we are listing the fields for
@@ -381,9 +354,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 06/11/2015
-     *
      * Tests to determine whether or not the class that has been passed to this function
      * is a descendant of DataObject.
      *
@@ -406,9 +376,6 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifinotis u5809912
-     * 06/11/2015
-     *
      * Drops a table from the database, but by table name, not class type.
      *
      * @param table_name - the table to delete.
@@ -431,15 +398,13 @@ public class SimpleDB
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 07/11/2015
-     *
      * Loads all of this object's fields from the given dataset.
      * The field names - which it obtains through a bit of reflection -
      * form the names of the database columns. Brilliant, no?
      *
      * @param object_type - the type of object to load / the table to load from
      * @param dataset     - the database recordset to load data from.
+     * @return - an instance of object_type, containing the data loaded from dataset
      */
     private static DataObject __load_from_db(Class object_type, ResultSet dataset)
     {
