@@ -3,7 +3,7 @@ package NickSifniotis.SimpleDatabase;
 import NickSifniotis.SimpleDatabase.Columns.Column;
 import NickSifniotis.SimpleDatabase.Columns.ColumnPair;
 import NickSifniotis.SimpleDatabase.Columns.IntegerColumn;
-import NickSifniotis.SimpleDatabase.Columns.StringColumn;
+import NickSifniotis.SimpleDatabase.Columns.TextColumn;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -32,7 +32,7 @@ public class DataObjectFactory
         field_mapping.put("boolean", "INTEGER");
         field_mapping.put("float", "REAL");
         field_mapping.put("double", "REAL");
-        field_mapping.put("StringColumn", "TEXT");
+        field_mapping.put("TextColumn", "TEXT");
 
         initialised = true;
     }
@@ -58,14 +58,19 @@ public class DataObjectFactory
 
         Connection connection = null;
         ResultSet results = null;
-        try {
+        try
+        {
             connection = DBManager.Connect();
             results = DBManager.ExecuteQuery(query, connection);
             while (results.next())
                 result_list.add(Load(object_type, results));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
-        } finally {
+        }
+        finally
+        {
             DBManager.Disconnect(results);
             DBManager.Disconnect(connection);
         }
@@ -108,9 +113,9 @@ public class DataObjectFactory
                     IntegerColumn ic = (IntegerColumn) f.Column;
                     ic.Value = dataset.getInt(f.ColumnName);
                 }
-                else if (f.Column instanceof StringColumn)
+                else if (f.Column instanceof TextColumn)
                 {
-                    StringColumn sc = (StringColumn) f.Column;
+                    TextColumn sc = (TextColumn) f.Column;
                     sc.Value = dataset.getString(f.ColumnName);
                 }
             }

@@ -3,23 +3,23 @@ package NickSifniotis.SimpleDatabase.Columns;
 /**
  * Created by nsifniotis on 9/11/15.
  *
- * A class that represents an integer field / table column.
+ * Provides a generic boolean column type.
+ *
  */
-public class IntegerColumn extends Column
+public class BooleanColumn extends Column
 {
-    public int Value;
-
+    public boolean Value;
 
     /**
      * Nick Sifniotis u5809912
      * 09/11/2015
      *
-     * @return the current value of this field, in an SQL-happy format.
+     * @return an SQL-friendly representation of this field's current value
      */
     @Override
     public String SQLFieldValue()
     {
-        return String.valueOf(Value);
+        return Value ? "1" : "0";
     }
 
 
@@ -27,13 +27,12 @@ public class IntegerColumn extends Column
      * Nick Sifniotis u5809912
      * 09/11/2015
      *
-     * Updates this field with data
-     *
+     * Updates the current value of this field from the string returned by the DB.
      * @param new_value - the value returned from the database.
      */
     @Override
     public void DBUpdateValue(String new_value)
     {
-        this.Value = Integer.parseInt(new_value);
+        this.Value = (new_value.equals("1"));
     }
 }

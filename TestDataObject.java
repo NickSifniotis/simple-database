@@ -1,5 +1,5 @@
 import NickSifniotis.SimpleDatabase.Columns.IntegerColumn;
-import NickSifniotis.SimpleDatabase.Columns.StringColumn;
+import NickSifniotis.SimpleDatabase.Columns.TextColumn;
 import NickSifniotis.SimpleDatabase.DataObject;
 
 /**
@@ -10,8 +10,8 @@ import NickSifniotis.SimpleDatabase.DataObject;
  */
 public class TestDataObject extends DataObject
 {
-    public StringColumn FirstName = new StringColumn();
-    public StringColumn Surname = new StringColumn();
+    public TextColumn FirstName = new TextColumn();
+    public TextColumn Surname = new TextColumn();
     public IntegerColumn Age = new IntegerColumn();
 
 
