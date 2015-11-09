@@ -4,22 +4,21 @@ import java.sql.*;
 
 
 /**
- * Created by nsifniotis on 31/08/15.
- * Revised on 08/11/2015
+ * Wrapper class for interfacing with the SQLite database. This is an internal class that you don't
+ * need to worry about. Unless you are working on this project, in which case, you probably need
+ * to worry about it.
  *
- * Wrapper class for interfacing with the SQLite database.
- *
+ * @author Nick Sifniotis u5809912
+ * @since 31/08/2015
+ * @version 2.0.0
  */
-public class DBManager
+class DBManager
 {
     private static String database_path = "database";
     private static String database_name = "database.db";
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 08/11/2015
-     *
      * Changes the location and name of the database file.
      *
      * If you are going to change the database from the default database/database.db,
@@ -37,10 +36,7 @@ public class DBManager
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 31/08/2015
-     *
-     * Executes the given query
+     * Executes the given query.
      * No safety checks whatsoever are conducted on the query string. Use with caution!
      *
      * @param query - the query to execute
@@ -66,11 +62,8 @@ public class DBManager
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 31/08/2015
-     *
      * Executes the SQL and return the key of the affected row
-     * Obviously .. the query needs to be one INSERT only.
+     * Obviously .. the query can only be one INSERT only.
      *
      * @param query the query to execute
      * @return the pri key of the newly created row
@@ -111,16 +104,14 @@ public class DBManager
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 31/08/2015
-     *
      * Executes a query and returns the results in a resultSet
      * These queries are executed in three stages
      * connect -> executeQuery -> disconnect
      *
-     * @param query - the SELECT query to execute
-     * @return - the results of the query
-     * @throws SQLException - this class does not handle exceptions
+     * @param query The SELECT query to execute
+     * @param connection The object that represents a connection to the database. It is returned by DBManager.Connect()
+     * @return The results of the query, stored in a java.sql.ResultSet object.
+     * @throws SQLException, because this class does not handle exceptions at all.
      */
     public static ResultSet ExecuteQuery (String query, Connection connection) throws SQLException
     {
@@ -134,13 +125,10 @@ public class DBManager
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 31/08/2015
+     * Connects to the database, and
+     * returns a connection object that can be used to process SQL and so forth.
      *
-     * Connects to the tournament database.
-     * Returns a connection object that can be used to process SQL and so forth.
-     *
-     * @return a connection object that is connected to the database. Remember to close when finished!
+     * @return A connection object that is connected to the database. Remember to close when finished!
      * @throws SQLException - SQL Exceptions aren't handled by this class.
      */
     public static Connection Connect() throws SQLException
@@ -161,18 +149,21 @@ public class DBManager
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 31/08/2015
+     * Disconnects the given connection from the database.
      *
-     * A variety of methods for disconnecting from the database.
-     *
-     * @param connection - the connection to disconnect
+     * @param connection The connection to disconnect
      */
     public static void Disconnect (Connection connection)
     {
         closeQuietly(connection);
     }
 
+
+    /**
+     * Disconnect the ResultSet from the database.
+     *
+     * @param results The ResultSet to disconnect.
+     */
     public static void Disconnect (ResultSet results)
     {
         closeQuietly(results);
@@ -180,25 +171,6 @@ public class DBManager
 
 
     /**
-     * Nick Sifniotis u5809912
-     * 31/08/2015
-     *
-     * A quick and dirty function for converting between java booleans and SQL tinyints
-     *
-     * @param r the bool to convert
-     * @return an int that the database can understand
-     */
-    public static String BoolValue(boolean r)
-    {
-        return r ? "1" : "0";
-    }
-    public static String StringValue (String s) { return (s == null || s.equals("")) ? "''" : "'" + s + "'"; }
-
-
-    /**
-     * Nick Sifniotis u5809912
-     * 08/11/2015
-     *
      * Sssh!
      *
      * Utility functions to close database connections without a fuss.
