@@ -21,6 +21,7 @@ public class OrderingQuery extends Query
      * Constructor for this OrderingQuery object. Accepts the column that this ordering is to apply
      * to, and the enumeration that indicates whether it is to be ascending or descending.
      *
+     * @TODO these need to be fields, not columns! wtf! columns are instance dependant - these mustn't be!!
      * @param column - the Column to apply this ordering to
      * @param order - whether or not to sort small-to-large or large-to-small.
      */

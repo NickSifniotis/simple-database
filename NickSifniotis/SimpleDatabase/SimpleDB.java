@@ -1,6 +1,8 @@
 package NickSifniotis.SimpleDatabase;
 
 import NickSifniotis.SimpleDatabase.Columns.Column;
+import NickSifniotis.SimpleDatabase.Queries.OrderingQuery;
+import NickSifniotis.SimpleDatabase.Queries.Query;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -100,6 +102,62 @@ public class SimpleDB
         }
 
         return result;
+    }
+
+
+    /**
+     * <p>
+     *     Loads all the DataObjects that satisfy the supplied query conditions.
+     * </p>
+     * <p>
+     *     Runs the equivalent of a SELECT * FROM object_type WHERE conditions ORDER BY orderings
+     * </p>
+     * <p>
+     *     The order of conditions doesn't really matter, but the ordering of ordering is important.
+     *     The first element in the array takes the highest priority.
+     * </p>
+     *
+     * <pre>
+     * {@code
+     *      OrderingQuery[] order_by = new OrderingQuery [3];
+     *      order_by [0] = new OrderingQuery (Person.FirstName, Ordering.ASC);
+     *      order_by [1] = new OrderingQuery (Person.Surname, Ordering.DESC);
+     *      order_by [2] = new OrderingQuery (Person.Age, Ordering.ASC);
+     *
+     *      DataObject[] people = SimpleDB.Load (Person.class, null, order_by);
+     *
+     *
+     *      // the above is exactly equivalent to SELECT * FROM Person ORDER BY FirstName ASC, Surname DESC, Age ASC
+     * }
+     * </pre>
+     *
+     * @param orderings The ordering clauses to apply to the query.
+     * @param object_type The type of objects to load, create and return.
+     * @param conditions The condition clauses to apply to the query.
+     * @return An array of DataObjects.
+     */
+    public static DataObject[] Load(Class object_type, Query[] conditions, OrderingQuery[] orderings)
+    {
+        String condition_clause = "";
+        String ordering_clause = "";
+
+        if (conditions != null && conditions.length > 0)
+        {
+
+        }
+
+        if (orderings != null && orderings.length > 0)
+        {
+            for (OrderingQuery oq: orderings)
+                ordering_clause += (!ordering_clause.equals("") ? ", " : "") + oq.SQL();
+
+            if (!ordering_clause.equals(""))
+                ordering_clause = " ORDER BY " + ordering_clause;
+        }
+
+        String query = "SELECT * FROM " + object_type.getSimpleName() + condition_clause + ordering_clause;
+
+        return __load_all_from_db(object_type, query);
     }
 
 
@@ -479,5 +537,41 @@ public class SimpleDB
         }
 
         return result;
+    }
+
+
+    /**
+     * Processes the supplied SQL query and returns an array of DataObject instances
+     * that have been initialised to the data returned by the database.
+     *
+     * @param object_type The type of objects to return.
+     * @param query The SQL query to execute
+     * @return An array of DataObject instances.
+     */
+    private static DataObject[] __load_all_from_db(Class object_type, String query)
+    {
+        List<DataObject> result_list = new LinkedList<>();
+
+        Connection connection = null;
+        ResultSet results = null;
+        try
+        {
+            connection = DBManager.Connect();
+            results = DBManager.ExecuteQuery(query, connection);
+            while (results.next())
+                result_list.add(__load_from_db(object_type, results));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            DBManager.Disconnect(results);
+            DBManager.Disconnect(connection);
+        }
+
+        DataObject[] res = new DataObject[result_list.size()];
+        return result_list.toArray(res);
     }
 }
