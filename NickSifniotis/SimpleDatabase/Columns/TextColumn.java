@@ -52,4 +52,15 @@ public class TextColumn extends Column
     {
         this.Value = new_value;
     }
+
+
+    /**
+     * This method returns the column type that the database will use to store these columns.
+     *
+     * @return An SQL fragment that can be injected directly into queries.
+     */
+    public static String SQLColumnDescriptor()
+    {
+        return "TEXT";
+    }
 }

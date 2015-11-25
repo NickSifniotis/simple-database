@@ -28,27 +28,6 @@ import java.util.List;
  */
 public class SimpleDB
 {
-    private static HashMap<String, String> field_mapping;
-    private static boolean initialised = false;
-
-
-    /**
-     * Initialises the mapping that connects Column descendants with their corresponding
-     * database data types. This probably belongs in the child classes themselves.
-     * @TODO: read that and implement.
-     */
-    public static void Initialise()
-    {
-        field_mapping = new HashMap<>();
-        field_mapping.put("IntegerColumn", "INTEGER");
-        field_mapping.put("BooleanColumn", "INTEGER");
-        field_mapping.put("NumberColumn", "REAL");
-        field_mapping.put("TextColumn", "TEXT");
-
-        initialised = true;
-    }
-
-
     /**
      * Loads a DataObject object from the database by Primary Key. As the object returned is a DataObject,
      * you will need to cast it into your class to access its fields.
@@ -75,10 +54,6 @@ public class SimpleDB
      */
     public static DataObject Load(Class object_type, int pri_key)
     {
-        if (!initialised)
-            Initialise();
-
-
         DataObject result = null;
         String query = "SELECT * FROM " + object_type.getSimpleName() + " WHERE PrimaryKey = " + String.valueOf(pri_key);
 
@@ -169,10 +144,6 @@ public class SimpleDB
      */
     public static DataObject[] LoadAll(Class object_type)
     {
-        if (!initialised)
-            Initialise();
-
-
         List<DataObject> result_list = new LinkedList<>();
         String query = "SELECT * FROM " + object_type.getSimpleName();
 
@@ -207,10 +178,6 @@ public class SimpleDB
      */
     public static void Save(DataObject object)
     {
-        if (!initialised)
-            Initialise();
-
-
         // the structure of INSERT and UPDATE queries is fundamentally different,
         // so there will be two largish blocks of code here.
 
@@ -277,10 +244,6 @@ public class SimpleDB
      */
     public static void SaveAll(DataObject[] objects)
     {
-        if (!initialised)
-            Initialise();
-
-
         for (DataObject o : objects)
             Save(o);
     }
@@ -293,10 +256,6 @@ public class SimpleDB
      */
     public static void DeleteTable(Class object_type)
     {
-        if (!initialised)
-            Initialise();
-
-
         String table_name = object_type.getSimpleName();
         __delete_table_by_name(table_name);
     }
@@ -309,10 +268,6 @@ public class SimpleDB
      */
     public static void CreateTable(Class object_type)
     {
-        if (!initialised)
-            Initialise();
-
-
         // pull out all of the relevant data about the class that we are saving
         String table_name = object_type.getSimpleName();
         String[] column_declarations = __get_column_declarations(object_type);
@@ -375,9 +330,6 @@ public class SimpleDB
      */
     public static DataObject New(Class object_type)
     {
-        if (!initialised)
-            Initialise();
-
         if (!__validate_descendant_of_dataobject(object_type))
             return null;
 
@@ -434,8 +386,8 @@ public class SimpleDB
     /**
      * Returns an array containing the names of every Column type field in the class.
      *
-     * @param class_type - the class that we are listing the fields for
-     * @return the array of strings
+     * @param class_type The DataObject child that we are listing the fields for
+     * @return The array of strings
      */
     private static String[] __get_column_declarations(Class class_type)
     {
@@ -448,8 +400,18 @@ public class SimpleDB
         List<String> holding_list = new LinkedList<>();
 
         for (Field f: holding_array)
-            if (field_mapping.containsKey(f.getType().getSimpleName()))
-                holding_list.add(f.getName() + " " + field_mapping.get(f.getType().getSimpleName()));
+        {
+            Class current_class = f.getClass();
+            try
+            {
+                String res = (String) current_class.getMethod("SQLColumnDescriptor").invoke(null);
+                holding_list.add(f.getName() + " " + res);
+            }
+            catch (Exception e)
+            {
+                // haha do nothing.
+            }
+        }
 
         String[] results = new String[holding_list.size()];
         return holding_list.toArray(results);
@@ -485,10 +447,6 @@ public class SimpleDB
      */
     private static void __delete_table_by_name(String table_name)
     {
-        if (!initialised)
-            Initialise();
-
-
         String query = "DROP TABLE IF EXISTS " + table_name;
 
         try {
@@ -511,10 +469,6 @@ public class SimpleDB
      */
     private static DataObject __load_from_db(Class object_type, ResultSet dataset)
     {
-        if (!initialised)
-            Initialise();
-
-
         DataObject result = null;
         try
         {
