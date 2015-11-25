@@ -5,11 +5,32 @@ package NickSifniotis.SimpleDatabase.Columns;
  *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
- * @version 1.0.0
+ * @version 1.2.0
  */
 public class BooleanColumn extends Column
 {
     public boolean Value;
+
+
+    /**
+     * Default constructor. Sets the default value stored in this object to false.
+     */
+    public BooleanColumn()
+    {
+        this.Value = false;
+    }
+
+
+    /**
+     * Constructor that initialises this object's value to a number given by the user/programmer.
+     *
+     * @param v The value to initialise to.
+     */
+    public BooleanColumn (boolean v)
+    {
+        this.Value = v;
+    }
+
 
     /**
      * @return an SQL-friendly representation of this field's current value

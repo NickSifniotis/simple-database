@@ -13,19 +13,39 @@ public class IntegerColumn extends Column
 
 
     /**
-     * @return the current value of this field, in an SQL-happy format.
+     * Default constructor. Sets the default value stored in this object to zero.
      */
-    @Override
-    public String SQLFieldValue()
+    public IntegerColumn()
     {
-        return String.valueOf(Value);
+        this.Value = 0;
     }
 
 
     /**
-     * Updates this field with data
+     * Constructor that initialises this object's value to a number given by the user/programmer.
      *
-     * @param new_value - the value returned from the database.
+     * @param v The value to initialise to.
+     */
+    public IntegerColumn (int v)
+    {
+        this.Value = v;
+    }
+
+
+    /**
+     * @return Returns the current value of this field, in an SQL-happy format.
+     */
+    @Override
+    public String SQLFieldValue()
+    {
+        return String.valueOf(this.Value);
+    }
+
+
+    /**
+     * Updates this field with data retrieved from the database.
+     *
+     * @param new_value The value returned from the database.
      */
     @Override
     public void DBUpdateValue(String new_value)

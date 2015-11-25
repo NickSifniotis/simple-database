@@ -1,6 +1,6 @@
 package NickSifniotis.SimpleDatabase.Queries;
 
-import NickSifniotis.SimpleDatabase.Columns.Column;
+import java.lang.reflect.Field;
 
 /**
  * This query fragment allows you to select the sort ordering of the data
@@ -8,36 +8,43 @@ import NickSifniotis.SimpleDatabase.Columns.Column;
  *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
- * @version 1.0.0
+ * @version 1.1.0
  *
  */
 public class OrderingQuery extends Query
 {
     private Ordering __order;
-    private Column __column;
+    private Field __column;
 
 
     /**
      * Constructor for this OrderingQuery object. Accepts the column that this ordering is to apply
      * to, and the enumeration that indicates whether it is to be ascending or descending.
      *
-     * @TODO these need to be fields, not columns! wtf! columns are instance dependant - these mustn't be!!
-     * @param column - the Column to apply this ordering to
+     * @param object The data object's class object.
+     * @param col_name The column to sort by.
      * @param order - whether or not to sort small-to-large or large-to-small.
      */
-    public OrderingQuery (Column column, Ordering order)
+    public OrderingQuery (Class object, String col_name, Ordering order)
     {
-        __order = order;
-        __column = column;
+        try
+        {
+            __order = order;
+            __column = object.getField(col_name);
+        }
+        catch (Exception e)
+        {
+            // do nothing
+        }
     }
 
 
     /**
-     * @return the SQL that this ordering object represents
+     * @return An SQL sub-query that can be used to query the database.
      */
     @Override
     public String SQL()
     {
-        return __column.Name() + " " + __order.SQL();
+        return __column.getName() + " " + __order.SQL();
     }
 }

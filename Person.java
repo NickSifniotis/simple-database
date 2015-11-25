@@ -10,17 +10,7 @@ import NickSifniotis.SimpleDatabase.DataObject;
  */
 public class Person extends DataObject
 {
-    public TextColumn FirstName = new TextColumn();
-    public TextColumn Surname = new TextColumn();
+    public TextColumn FirstName = new TextColumn("Nick");
+    public TextColumn Surname = new TextColumn("Sifniotis");
     public IntegerColumn Age = new IntegerColumn();
-
-
-    @Override
-    public void SetDefaults()
-    {
-        super.SetDefaults();
-        FirstName.Value = "Nick";
-        Surname.Value = "Sifniotis";
-        Age.Value = 34;
-    }
 }

@@ -5,11 +5,31 @@ package NickSifniotis.SimpleDatabase.Columns;
  *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
- * @version 1.0.0
+ * @version 1.2.0
  */
 public class TextColumn extends Column
 {
     public String Value;
+
+
+    /**
+     * Default constructor. Sets the default value stored in this object to the enpty string.
+     */
+    public TextColumn()
+    {
+        this.Value = "";
+    }
+
+
+    /**
+     * Constructor that initialises this object's value to a number given by the user/programmer.
+     *
+     * @param v The value to initialise to.
+     */
+    public TextColumn (String v)
+    {
+        this.Value = v;
+    }
 
 
     /**

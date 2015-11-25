@@ -200,7 +200,6 @@ public class SimpleDB
     }
 
 
-
     /**
      * Saves the object into the database.
      *

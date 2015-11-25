@@ -3,6 +3,7 @@ package NickSifniotis.SimpleDatabase;
 import NickSifniotis.SimpleDatabase.Columns.Column;
 import java.lang.reflect.Field;
 
+
 /**
  * <p>
  *     DataObject is the base class for any objects that you wish to store in the database.
@@ -27,7 +28,7 @@ import java.lang.reflect.Field;
  *
  * @author Nick Sifniotis u5809912
  * @since 07/11/2015
- * @version 1.1.0
+ * @version 1.2.0
  */
 public abstract class DataObject
 {
@@ -58,6 +59,7 @@ public abstract class DataObject
             // no fucks given here
         }
     }
+
 
     /**
      * Set the default values for this DataObject's columns. If a column does not require a

@@ -1,4 +1,6 @@
 import NickSifniotis.SimpleDatabase.DataObject;
+import NickSifniotis.SimpleDatabase.Queries.Ordering;
+import NickSifniotis.SimpleDatabase.Queries.OrderingQuery;
 import NickSifniotis.SimpleDatabase.SimpleDB;
 
 /**
@@ -11,6 +13,9 @@ public class test
     public static void main(String[] args)
     {
         Person p = (Person) SimpleDB.New(Person.class);
+
+        OrderingQuery query = new OrderingQuery(Person.class, "FirstName", Ordering.ASCENDING);
+        System.out.println(query.SQL());
 
         DataObject[] objs = SimpleDB.LoadAll(Person.class);
 
