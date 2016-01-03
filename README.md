@@ -1,8 +1,14 @@
 # simple-database
 A small Java object-relational mapping for quick and dirty database connectivity.
 
+## Requirements
+- Java JDK 1.8 or better. This code uses streams, lambda expressions and other lazy programming techniques that
+previous versions of Java do not support.
+- SQLite, a compact standalone RDBMS that you can import directly into your Java projects. It is available 
+[here](https://bitbucket.org/xerial/sqlite-jdbc/downloads).
+
 ## Installation
-This stuff is still being worked out. For now, note that your project will require the SQLite mini DBMS. That library is not stored on this repo; download it separately from [here](https://bitbucket.org/xerial/sqlite-jdbc/downloads).
+TBA. You will probably include the JAR file in your project the way that you would any other library. 
 
 ## tl;dr
 1. Import the library into your project.

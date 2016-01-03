@@ -184,14 +184,29 @@ public class SimpleDB
 
 
     /**
-     * Saves all of the objects into the database.
+     * <p>
+     *     Saves all <i>objects</i> into the database.
+     * </p>
      *
-     * @param objects The list of objects to save.
+     * @param objects The objects to save, in an array.
      */
     public static void SaveAll(DataObject[] objects)
     {
-        for (DataObject o : objects)
+        for (DataObject o: objects)
             Save(o);
+    }
+
+
+    /**
+     * <p>
+     *     Saves all <i>objects</i> into the database.
+     * </p>
+     *
+     * @param objects The objects to save into the database.
+     */
+    public static void SaveAll(List<DataObject> objects)
+    {
+        objects.stream().forEach(SimpleDB::Save);
     }
 
 
@@ -453,8 +468,9 @@ public class SimpleDB
 
 
     /**
-     * Processes the supplied SQL query and returns an array of DataObject instances
-     * that have been initialised to the data returned by the database.
+     * <p>
+     *     Processes the supplied SQL query and returns the data in an array of DataObject instances.
+     * </p>
      *
      * @param object_type The type of objects to return.
      * @param query The SQL query to execute
