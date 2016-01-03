@@ -1,7 +1,10 @@
 # simple-database
 A small Java object-relational mapping for quick and dirty database connectivity.
 
-# tl;dr
+## Installation
+This stuff is still being worked out. For now, note that your project will require the SQLite mini DBMS. That library is not stored on this repo; download it separately from [here](https://bitbucket.org/xerial/sqlite-jdbc/downloads).
+
+## tl;dr
 1. Import the library into your project.
 2. To create a table, subclass *DataObject*. Any public fields in your subclass that are 
 subclasses of *Column* will be turned into the columns of your table.
