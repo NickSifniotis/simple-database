@@ -1,14 +1,11 @@
 package NickSifniotis.SimpleDatabase;
 
 import NickSifniotis.SimpleDatabase.Columns.Column;
-import NickSifniotis.SimpleDatabase.Queries.OrderingQuery;
-import NickSifniotis.SimpleDatabase.Queries.Query;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +22,7 @@ import java.util.List;
  *
  * @author Nick Sifniotis u5809912
  * @since 06/11/2015
+ * @version 1.1.0
  */
 public class SimpleDB
 {
@@ -82,62 +80,8 @@ public class SimpleDB
 
     /**
      * <p>
-     *     Loads all the DataObjects that satisfy the supplied query conditions.
+     *     Loads all items from this class's table.
      * </p>
-     * <p>
-     *     Runs the equivalent of a SELECT * FROM object_type WHERE conditions ORDER BY orderings
-     * </p>
-     * <p>
-     *     The order of conditions doesn't really matter, but the ordering of ordering is important.
-     *     The first element in the array takes the highest priority.
-     * </p>
-     *
-     * <pre>
-     * {@code
-     *      OrderingQuery[] order_by = new OrderingQuery [3];
-     *      order_by [0] = new OrderingQuery (Person.FirstName, Ordering.ASC);
-     *      order_by [1] = new OrderingQuery (Person.Surname, Ordering.DESC);
-     *      order_by [2] = new OrderingQuery (Person.Age, Ordering.ASC);
-     *
-     *      DataObject[] people = SimpleDB.Load (Person.class, null, order_by);
-     *
-     *
-     *      // the above is exactly equivalent to SELECT * FROM Person ORDER BY FirstName ASC, Surname DESC, Age ASC
-     * }
-     * </pre>
-     *
-     * @param orderings The ordering clauses to apply to the query.
-     * @param object_type The type of objects to load, create and return.
-     * @param conditions The condition clauses to apply to the query.
-     * @return An array of DataObjects.
-     */
-    public static DataObject[] Load(Class object_type, Query[] conditions, OrderingQuery[] orderings)
-    {
-        String condition_clause = "";
-        String ordering_clause = "";
-
-        if (conditions != null && conditions.length > 0)
-        {
-
-        }
-
-        if (orderings != null && orderings.length > 0)
-        {
-            for (OrderingQuery oq: orderings)
-                ordering_clause += (!ordering_clause.equals("") ? ", " : "") + oq.SQL();
-
-            if (!ordering_clause.equals(""))
-                ordering_clause = " ORDER BY " + ordering_clause;
-        }
-
-        String query = "SELECT * FROM " + object_type.getSimpleName() + condition_clause + ordering_clause;
-
-        return __load_all_from_db(object_type, query);
-    }
-
-
-    /**
-     * Loads all items from this class's table.
      *
      * @param object_type The type of objects to load
      * @return An array of all the loaded objects.
@@ -172,9 +116,11 @@ public class SimpleDB
 
 
     /**
-     * Saves the object into the database.
+     * <p>
+     *     Saves the object into the database.
+     * </p>
      *
-     * @param object - the object to save.
+     * @param object The row to save.
      */
     public static void Save(DataObject object)
     {
@@ -240,7 +186,7 @@ public class SimpleDB
     /**
      * Saves all of the objects into the database.
      *
-     * @param objects - the list of objects to save.
+     * @param objects The list of objects to save.
      */
     public static void SaveAll(DataObject[] objects)
     {
@@ -250,9 +196,11 @@ public class SimpleDB
 
 
     /**
-     * Drops the table for the given object type from the database. Bye bye data.
+     *  <p>
+     *     Drops the table for the given object type from the database. Bye bye data.
+     *  </p>
      *
-     * @param object_type - the class that corresponds to the table to drop.
+     * @param object_type The class that corresponds to the table to drop.
      */
     public static void DeleteTable(Class object_type)
     {
@@ -262,9 +210,11 @@ public class SimpleDB
 
 
     /**
-     * Creates a table in the database who's schema conforms to the fields declared in the class object_type
+     * <p>
+     *    Creates a table in the database who's schema conforms to the fields declared in the class object_type.
+     * </p>
      *
-     * @param object_type - the class that contains the metadata for the table construction.
+     * @param object_type The class that contains the metadata for the table construction.
      */
     public static void CreateTable(Class object_type)
     {
@@ -302,11 +252,11 @@ public class SimpleDB
 
     /**
      * <p>
-     *      Creates a new instance of the type of object specified by the user.
+     *     Creates a new instance of <i>object_type</i>.
      * </p>
      * <p>
      *     Creates a new instance of object_type, autosets the default values, and saves to the database.
-     *     Do not call this method if you do not intend to save the object.
+     *     Do not call this method if you do not intend to save the object to the database.
      * </p>
      *
      * <p>
@@ -355,8 +305,8 @@ public class SimpleDB
     /**
      * Returns a list of Column objects for the given DataObject instance.
      *
-     * @param object - the DataObject who's fields we want
-     * @return - an array of all Columns (or descendants) found in that object.
+     * @param object The DataObject who's fields we want
+     * @return An array of all Columns (or descendants) found in that object.
      */
     private static Column[] __get_object_fields(DataObject object)
     {
@@ -401,7 +351,7 @@ public class SimpleDB
 
         for (Field f: holding_array)
         {
-            Class current_class = f.getClass();
+            Class current_class = f.getType();
             try
             {
                 String res = (String) current_class.getMethod("SQLColumnDescriptor").invoke(null);
@@ -419,10 +369,17 @@ public class SimpleDB
 
 
     /**
-     * Tests to determine whether or not the class that has been passed to this function
-     * is a descendant of DataObject.
+     * <p>
+     *     Private helper function that tests whether the class <i>unknown</i> is a descendant
+     *     of <i>DataObject</i>.
+     * </p>
      *
-     * SimpleDB is only able to work with descendants of that class.
+     * <p>
+     *     The SimpleDB library maps tables in a relational database to instances of Java objects.
+     *     To facilitate this, a lot of source code has been hidden away in the <i>DataObject</i> class.
+     *     Classes of objects that you want to store in the database have to be descendants of the
+     *     <i>DataObject</i> class, otherwise SimpleDB will not be able to do anything with them.
+     * </p>
      *
      * @param unknown The class that is being tested.
      * @return True if the class is a valid descendant, false otherwise.
@@ -441,7 +398,9 @@ public class SimpleDB
 
 
     /**
-     * Drops a table from the database, but by table name, not class type.
+     * <p>
+     *     Drops <i>table_name</i> from the database.
+     * </p>
      *
      * @param table_name The table to delete.
      */
