@@ -2,6 +2,7 @@ package NickSifniotis.SimpleDatabase.Columns;
 
 /**
  * A vanilla Boolean column type for SimpleDB DataObjects.
+ * @TODO improve my comments
  *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
