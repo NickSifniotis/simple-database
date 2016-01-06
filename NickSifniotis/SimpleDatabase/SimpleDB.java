@@ -1,7 +1,7 @@
 package NickSifniotis.SimpleDatabase;
 
 import NickSifniotis.SimpleDatabase.Columns.Column;
-
+import NickSifniotis.DatabaseManager.*;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -26,6 +26,10 @@ import java.util.List;
  */
 public class SimpleDB
 {
+    /** The database manager instance. **/
+    private static DBManager db = DBManagerFactory.NewDBManager().build();
+
+
     /**
      * Loads a DataObject object from the database by Primary Key. As the object returned is a DataObject,
      * you will need to cast it into your class to access its fields.
@@ -59,8 +63,8 @@ public class SimpleDB
         ResultSet results = null;
         try
         {
-            connection = DBManager.Connect();
-            results = DBManager.ExecuteQuery(query, connection);
+            connection = db.Connect();
+            results = db.ExecuteQuery(query, connection);
             if (results.next())
                 result = __load_from_db(object_type, results);
         }
@@ -70,8 +74,8 @@ public class SimpleDB
         }
         finally
         {
-            DBManager.Disconnect(results);
-            DBManager.Disconnect(connection);
+            db.Disconnect(results);
+            db.Disconnect(connection);
         }
 
         return result;
@@ -91,12 +95,12 @@ public class SimpleDB
         List<DataObject> result_list = new LinkedList<>();
         String query = "SELECT * FROM " + object_type.getSimpleName();
 
-        Connection connection = null;
+        Connection connection;
         ResultSet results = null;
         try
         {
-            connection = DBManager.Connect();
-            results = DBManager.ExecuteQuery(query, connection);
+            connection = db.Connect();
+            results = db.ExecuteQuery(query, connection);
             while (results.next())
                 result_list.add(__load_from_db(object_type, results));
         }
@@ -106,8 +110,7 @@ public class SimpleDB
         }
         finally
         {
-            DBManager.Disconnect(results);
-            DBManager.Disconnect(connection);
+            db.Disconnect(results);
         }
 
         DataObject[] res = new DataObject[result_list.size()];
@@ -152,7 +155,7 @@ public class SimpleDB
 
             try
             {
-                object.PrimaryKey = DBManager.ExecuteReturnKey(query);
+                object.PrimaryKey = db.InsertAndReturnKey(query);
             }
             catch (Exception e)
             {
@@ -172,7 +175,7 @@ public class SimpleDB
 
             try
             {
-                DBManager.Execute(query);
+                db.Execute(query);
             }
             catch (Exception e)
             {
@@ -255,7 +258,7 @@ public class SimpleDB
         // GO GO GO
         try
         {
-            DBManager.Execute(query);
+            db.Execute(query);
         }
         catch (Exception e)
         {
@@ -318,7 +321,22 @@ public class SimpleDB
 
 
     /**
-     * Returns a list of Column objects for the given DataObject instance.
+     * <p>
+     *     A private helper method that returns a list of Column objects for the given DataObject instance.
+     * </p>
+     *
+     * <p>
+     *     The object-relational mapping leverages Java's reflective capabilities to automate the detection,
+     *     creation and maintenance of the columns in the database tables that we want to create. Table
+     *     structure is inferred by scanning the public fields inside the class that you want to store in the
+     *     database. Any fields found that are subclasses of the <i>Column</i> class are assumed to contain
+     *     data that the user wants stored in the DB, and columns in the table are created accordingly.
+     * </p>
+     *
+     * <p>
+     *     This method accepts an instance of a <i>DataObject</i> class and returns a list of
+     *     any public <i>Column</i> fields that are found within that object.
+     * </p>
      *
      * @param object The DataObject who's fields we want
      * @return An array of all Columns (or descendants) found in that object.
@@ -423,9 +441,12 @@ public class SimpleDB
     {
         String query = "DROP TABLE IF EXISTS " + table_name;
 
-        try {
-            DBManager.Execute(query);
-        } catch (SQLException e) {
+        try
+        {
+            db.Execute(query);
+        }
+        catch (SQLException e)
+        {
             System.out.println("SQL error on drop table " + table_name);
             e.printStackTrace();
         }
@@ -484,8 +505,8 @@ public class SimpleDB
         ResultSet results = null;
         try
         {
-            connection = DBManager.Connect();
-            results = DBManager.ExecuteQuery(query, connection);
+            connection = db.Connect();
+            results = db.ExecuteQuery(query, connection);
             while (results.next())
                 result_list.add(__load_from_db(object_type, results));
         }
@@ -495,8 +516,7 @@ public class SimpleDB
         }
         finally
         {
-            DBManager.Disconnect(results);
-            DBManager.Disconnect(connection);
+            db.Disconnect(results);
         }
 
         DataObject[] res = new DataObject[result_list.size()];
