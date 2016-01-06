@@ -1,7 +1,9 @@
 package NickSifniotis.SimpleDatabase.Columns;
 
 /**
- * Represents a real number column in the database.
+ * <p>
+ *     Represents a real number column in the database.
+ * </p>
  *
  * @author Nick Sifniotis u5809912
  * @since 09/11/2015
@@ -22,7 +24,9 @@ public class NumberColumn extends Column
 
 
     /**
-     * Constructor that initialises this object's value to a number given by the user/programmer.
+     * <p>
+     *     Constructor that initialises this object's value to a number given by the user/programmer.
+     * </p>
      *
      * @param v The value to initialise to.
      */
@@ -33,7 +37,7 @@ public class NumberColumn extends Column
 
 
     /**
-     * @return the current value of this field, in a DB-friendly way.
+     * @return The current value of this field, in a DB-friendly way.
      */
     @Override
     public String SQLFieldValue()
@@ -43,9 +47,11 @@ public class NumberColumn extends Column
 
 
     /**
-     * Updates the value of this field with data from the DB.
+     * <p>
+     *     Updates the value stored in this field.
+     * </p>
      *
-     * @param new_value - the value returned from the database.
+     * @param new_value The value returned from the database.
      */
     @Override
     public void DBUpdateValue(String new_value)
@@ -55,7 +61,9 @@ public class NumberColumn extends Column
 
 
     /**
-     * This method returns the column type that the database will use to store these columns.
+     * <p>
+     *     This method returns the column type that the database will use to store these columns.
+     * </p>
      *
      * @return An SQL fragment that can be injected directly into queries.
      */

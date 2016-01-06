@@ -384,7 +384,7 @@ public class SimpleDB
 
         for (Field f: holding_array)
         {
-            Class current_class = f.getType();
+            Class<?> current_class = f.getType();
             try
             {
                 String res = (String) current_class.getMethod("SQLColumnDescriptor").invoke(null);
@@ -392,7 +392,9 @@ public class SimpleDB
             }
             catch (Exception e)
             {
-                // haha do nothing.
+                // Do nothing. DataObject descendants are allowed to have fields other than Columns.
+                // The default action is to simply ignore them; they are not being stored in the database
+                // so it's none of SimpleDB's business.
             }
         }
 
@@ -501,7 +503,7 @@ public class SimpleDB
     {
         List<DataObject> result_list = new LinkedList<>();
 
-        Connection connection = null;
+        Connection connection;
         ResultSet results = null;
         try
         {

@@ -37,9 +37,13 @@ public abstract class DataObject
 
 
     /**
-     * Finds all of this object's Column fields, and sets their names.
-     * It might be possible to get a Column instance to infer its own name - maybe - watch
-     * this space. For now, they have to be set and stored manually, like this.
+     * <p>
+     *      Finds all of this object's Column fields, and sets their names.
+     *      It might be possible to get a Column instance to infer its own name - maybe - watch
+     *      this space. For now, they have to be set and stored manually, like this.
+     *
+     *      @TODO watching this space
+     * </p>
      */
     public void SetColumnNames()
     {
@@ -62,12 +66,16 @@ public abstract class DataObject
 
 
     /**
-     * Set the default values for this DataObject's columns. If a column does not require a
-     * default value, there is no need to set anything. If none of your columns need a default value,
-     * there is no need to override this method.
+     * <p>
+     *      Set the default values for this DataObject's columns. If a column does not require a
+     *      default value, there is no need to set anything. If none of your columns need a default value,
+     *      there is no need to override this method.
+     * </p>
      *
-     * Note that if you do override this, it is imperative that your first line invokes this method.
-     * {@code super.SetDefaults();}
+     * <p>
+     *      Note that if you do override this, it is imperative that your first line invokes this method.
+     *      {@code super.SetDefaults();}
+     * </p>
      */
     public void SetDefaults()
     {
